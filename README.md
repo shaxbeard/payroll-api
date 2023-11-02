@@ -6,24 +6,21 @@ Local Project
 Local MySQL Database
 - On your local machine, ensure that you have mySQL installed
 - Create a database called payroll
+- Create a table called tbl_payroll
 
-
-
+Local Table
+- Create a column for id (INT, PK, NN, AI)
+- Create a column for date (DATE)
+- Create a column for hours_worked (DOUBLE)
+- Create a column for employee_id (INT)
+- Create a column for job_group (VARCHAR(1))
 
 ---
 
 # Project Description
 
-- A basic full-stack application using
-  - Express.js for the server
-  - Passport.js for authentication
-  - EJS for html templating
-  - MongoDB and Mongoose for the database
+
 
 # Future Plans
 
-This project is just in the beginning phase and has limited functionality. Future plans include:
-  - Adding React on the front end 
-  - Completing the checkout process
-  - Building local maps with the Google Maps API
 ---
