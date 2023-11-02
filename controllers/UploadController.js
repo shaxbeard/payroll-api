@@ -75,5 +75,5 @@ module.exports = {
           .json({ message: "CSV file uploaded and data inserted into MySQL" });
       });
   },
-  uploadMiddleware: upload.single("csvFile"), // Export the upload middleware
+  uploadMiddleware: upload.single("csvFile"),
 };
