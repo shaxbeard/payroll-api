@@ -3,23 +3,7 @@ const fs = require("fs");
 const moment = require("moment");
 const multer = require("multer");
 const uuid = require("uuid");
-const mysql = require("mysql2");
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "s4mudg3e",
-  database: "payroll",
-});
-
-// Connect to the database
-db.connect(err => {
-  if (err) {
-    console.error("Database connection error: " + err.message);
-  } else {
-    console.log("Connected to MySQL database");
-  }
-});
+const db = require("../database");
 
 //Config Multer for file uploads
 const storage = multer.diskStorage({
