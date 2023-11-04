@@ -5,6 +5,11 @@ const multer = require("multer");
 const uuid = require("uuid");
 const db = require("../database");
 
+// Helper function to replace spaces with underscores
+function replaceSpacesWithUnderscores(header) {
+  return header.replace(/\s/g, "_");
+}
+
 //Config Multer for file uploads
 const storage = multer.diskStorage({
   // destination: function (req, file, cb) {
@@ -25,24 +30,17 @@ module.exports = {
     console.log(req.file);
     // res.send("test");
 
-    // const headerMapping = {
-    //   date: "date",
-    //   "hours worked": "hours_worked",
-    //   "employee id": "employee_id",
-    //   "job group": "job_group",
-    // };
-
     fs.createReadStream(filePath)
       .pipe(csvParser())
       .on("data", row => {
-        // Rename the column headers using the mapping
-        // for (const originalHeader in headerMapping) {
-        //   const dbColumnName = headerMapping[originalHeader];
-        //   row[dbColumnName] = row[originalHeader];
-        //   delete row[originalHeader];
-        // }
-
-        // Parse and format the date from 'DD/MM/YYYY' to 'YYYY-MM-DD'
+        for (const key in row) {
+          const newKey = replaceSpacesWithUnderscores(key);
+          if (key !== newKey) {
+            row[newKey] = row[key];
+            delete row[key];
+          }
+        }
+        // Parse and format the date sfrom 'DD/MM/YYYY' to 'YYYY-MM-DD'
         const formattedDate = moment(row.date, "DD/MM/YYYY").format(
           "YYYY-MM-DD"
         );
@@ -69,6 +67,7 @@ module.exports = {
       })
       .on("end", () => {
         // Remove the uploaded CSV file
+        console.log("Wait, does this delete the file?");
         fs.unlinkSync(filePath);
         res
           .status(200)
