@@ -1,7 +1,7 @@
 const db = require("../database");
 
 exports.getReport = (req, res) => {
-  // SQL query to calculate pay periods and amountPaid
+  // Query to calculate pay periods and amountPaid
   const sqlQuery = `
     SELECT
       employee_id,
@@ -20,7 +20,6 @@ exports.getReport = (req, res) => {
 
   db.query(sqlQuery, (error, results) => {
     if (error) {
-      // Handle errors
       console.error("Error executing query:", error);
       res
         .status(500)
@@ -36,6 +35,19 @@ exports.getReport = (req, res) => {
         },
         amountPaid: `$${result.amount_paid.toFixed(2)}`,
       }));
+
+      // Sort the formattedResults first by employeeId and then by startDate
+      formattedResults.sort((a, b) => {
+        // First, compare by employeeId
+        if (a.employeeId < b.employeeId) return -1;
+        if (a.employeeId > b.employeeId) return 1;
+
+        // If employeeId is the same, compare by startDate
+        if (a.payPeriod.startDate < b.payPeriod.startDate) return -1;
+        if (a.payPeriod.startDate > b.payPeriod.startDate) return 1;
+
+        return 0; // If they are equal in both employeeId and startDate
+      });
 
       // Return the formatted results as JSON
       res.json({ payrollReport: { employeeReports: formattedResults } });
