@@ -1,10 +1,16 @@
 const mysql = require("mysql2");
+require("dotenv").config();
+
+console.log(
+  "THis is my env variable for payroll_database --",
+  process.env.PAYROLL_DATABASE
+);
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "s4mudg3e",
-  database: "payroll",
+  host: process.env.PAYROLL_HOST,
+  user: process.env.PAYROLL_USERNAME,
+  password: process.env.PAYROLL_PASSWORD,
+  database: process.env.PAYROLL_DATABASE,
 });
 
 db.connect(err => {
