@@ -24,10 +24,10 @@ ENV variables
 
 - Create a .env file in the project root and add the credentials for your local database to these ENV variables:
 
-  PAYROLL_HOST=
-  PAYROLL_USERNAME=
-  PAYROLL_PASSWORD=
-  PAYROLL_DATABASE
+- PAYROLL_HOST=
+- PAYROLL_USERNAME=
+- PAYROLL_PASSWORD=
+- PAYROLL_DATABASE
 
 ---
 
@@ -45,7 +45,7 @@ This project is a payroll system API with two endpoints.
 
 # Future Plans
 
-- Optimizations for the API will depend to some degree on how the front end collects and send data to the endpoints, but more data validation in likely to be needed in the api.
+- Optimizations for the API will depend to some degree on how the front end collects and send data to the /upload endpoint, but more data validation in likely to be needed in the api.
 
 - For example, unless the front end can guarentee that the CSV file has full and correct data in every row, then the api should perform this validation.
 
