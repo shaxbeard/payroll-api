@@ -5,11 +5,6 @@ const multer = require("multer");
 const uuid = require("uuid");
 const db = require("../database");
 
-// Helper function to replace spaces with underscores
-function replaceSpacesWithUnderscores(header) {
-  return header.replace(/\s/g, "_");
-}
-
 // Config Multer for file uploads
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
@@ -22,13 +17,15 @@ const upload = multer({ storage: storage });
 module.exports = {
   uploadCSV: (req, res) => {
     const filePath = req.file.path;
+    console.log(req.file);
 
-    // console.log(req.file);
+    //Validation on the input filename here
+    const reportFilename = req.file.originalname;
 
     //////////////////////////////////////////////////////////////////////////////////////
     // Check if the report ID already exists in the database
-    const reportFilename = req.file.originalname;
     const reportId = Number(reportFilename.split("-")[2].slice(0, -4));
+    console.log("This is the report ID --", reportId);
     const checkQuery = "SELECT * FROM tbl_payroll WHERE report_id = ?";
     db.query(checkQuery, [reportId], (checkError, checkResults) => {
       if (checkError) {
@@ -51,6 +48,13 @@ module.exports = {
       fs.createReadStream(filePath)
         .pipe(csvParser())
         .on("data", row => {
+          //Input validation needed here - don't allow CSV files with missing data on any row
+
+          // Helper function to replace spaces with underscores
+          function replaceSpacesWithUnderscores(header) {
+            return header.replace(/\s/g, "_");
+          }
+
           // Process each row, replacing spaces with underscores in column headers
           for (const key in row) {
             const newKey = replaceSpacesWithUnderscores(key);
@@ -70,12 +74,14 @@ module.exports = {
           /////////////////////////////////////////////////////////////////////////////////////
           // Insert data into tbl_payroll table
           const query =
-            "INSERT INTO tbl_payroll (date, hours_worked, employee_id, job_group) VALUES (?, ?, ?, ?)";
+            "INSERT INTO tbl_payroll (date, hours_worked, employee_id, job_group, report_id, uploaded_at) VALUES (?, ?, ?, ?, ?, ?)";
           const values = [
             row.date,
             row.hours_worked,
             row.employee_id,
             row.job_group,
+            reportId,
+            new Date(),
           ];
 
           db.query(query, values, (err, result) => {
@@ -87,21 +93,10 @@ module.exports = {
           });
         })
         .on("end", () => {
-          // Store the report "id" for each entry in tbl_payroll too
-          const storeReportQuery =
-            "INSERT INTO tbl_payroll (report_id) VALUES (?)";
-          db.query(storeReportQuery, [reportId], (storeError, storeResult) => {
-            if (storeError) {
-              console.error("Error storing report ID:", storeError);
-              return res.status(500).json({
-                error: "An error occurred while storing the report ID.",
-              });
-            }
-            // Remove the uploaded CSV file
-            fs.unlinkSync(filePath);
-            res.status(200).json({
-              message: "CSV file uploaded and data inserted into MySQL",
-            });
+          // Remove the uploaded CSV file
+          fs.unlinkSync(filePath);
+          res.status(200).json({
+            message: "CSV file uploaded and data inserted into MySQL",
           });
         });
     });
