@@ -1,8 +1,9 @@
 # Getting Started with this Project
 
-1. After you clone the repo, cd into the project root and enter `npm install` in the terminal to install the required packages.
-2. On your local machine, ensure that you have MySQL installed
-3. Create a table called tbl_payroll in your local database/schema using this query:
+1. Ensure that you have NodeJS installed
+2. After you clone the repo, cd into the project root and enter `npm install` in the terminal.
+3. Ensure that you have MySQL installed
+4. Using MySQL, create a table called tbl_payroll in your local database/schema using this query:
 
 CREATE TABLE `tbl_payroll` (
 `id` int NOT NULL AUTO_INCREMENT,
@@ -15,7 +16,7 @@ CREATE TABLE `tbl_payroll` (
 PRIMARY KEY (`id`)
 );
 
-4. Create a .env file in the project root and add the credentials for your local database to these ENV variables:
+5. Create a .env file in the project root and add the credentials for your local database to these ENV variables:
 
 - PAYROLL_HOST=
 - PAYROLL_USERNAME=
