@@ -37,12 +37,32 @@ This project is a payroll system API with two endpoints.
 
 2. The /report endpoint generates a report detailing how much each employee should be paid in each biweekly pay period. Employees marked in job group A are paid $20/hr, and job group B is paid $30/hr.
 
-# Future Plans
+---
 
-- Optimizations for the API will depend to some degree on how the front end collects and send data to the /upload endpoint, but more data validation in likely to be needed in the api.
+# How did you test that your implementation was correct?
 
-- For example, unless the front end can guarentee that the CSV file has full and correct data in every row, then the api should perform this validation.
-
-- Assuming that there will user authentication added to the front end, then the user data (id, email, etc) will likely need to be added as a new column to the table.
+- I created a primary test case by manually calculating the pay periods and amountPaid data for the sample time-report-42.csv file. My test was then simply to match the results of my manual calculation with the output of the report from the api.
 
 ---
+
+# If this application was destined for a production environment, what would you add or change?
+
+- Becuase this application calculates money that will be paid out, it is crucial that it does not have bugs that will cause erroneous payouts or fail to make payouts. Before deploying to production, this app should undergo thorough testing, including some sort of beta release to a subset of actual users where it can be monitored under real-world usage before it goes out to all users at scale.
+
+- This may be out of scope for an evaluation of the api, but I would seriously reconsider the use of CSV files for data intake altogether. Can we not offer the users a front end that will collect data in a structured and web-native manner instead of having users enter submit data through CSV files?
+
+- Optimizations for the API will depend to some degree on how the front end collects and send data to the /upload endpoint, but more data validation in likely to be needed in the api. For example, unless the front end can guarentee that the CSV file has full and correct data in every row, then the api should perform this validation.
+
+- Assuming that there will user authentication added to the front end, then the user data (id, email, etc) will likely need to be added as a new column to the table so that there is a record of who actually uploaded each individual time report
+
+---
+
+# What compromises did you have to make as a result of the time constraints of this challenge?
+
+- I had to compromise on testing and data validation. It took me about 3 hours of development time just to stand the project up and get the endpoints working to satisfy the basic requirements. As I was working, I developed a preliminary list of topics for validation that should be implemented given more time. For example:
+
+- What if the user submits a file with just one or two empty cells that should have data?
+- What if the data is complete in the CSV but the data types are set incorrectly by the user?
+- What if the filename is valid like "time-report-42.csv" but the contents of the file are completely wrong - say, the file is the lunch order for hamburgers and tacos instead of having any of the correct columns?
+- What if the data in a CSV file is correct and complete, but the filename is incorrect - like "lunch-order-12242023"?
+- Et cetera...
